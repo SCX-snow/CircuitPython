@@ -5,8 +5,10 @@ import wifi
 import board
 import displayio
 import adafruit_imageload
+import neopixel
 from adafruit_display_text import label
 from adafruit_bitmap_font import bitmap_font
+from adafruit_led_animation.animation.colorcycle import ColorCycle
 
 image, palette = adafruit_imageload.load('/resource/back.bmp', bitmap=displayio.Bitmap, palette=displayio.Palette)
 tile_grid = displayio.TileGrid(image, pixel_shader=palette)
@@ -47,7 +49,7 @@ ssid = os.getenv("WIFI_SSID")
 password = os.getenv("WIFI_PASSWORD")
 
 while True:
-    print('try to connect '+password+'@'+ssid)
+    print('try to connect ' + password + '@' + ssid)
     wifi.radio.connect(ssid, password)
     if wifi.radio.ping(ipaddress.IPv4Address('114.114.114.114')) is not None:
         print('wifi connected')
@@ -55,5 +57,9 @@ while True:
     print('wifi connect failed')
     time.sleep(1)
 
+pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness=0.3)
+color_cycle = ColorCycle(pixel,0.5)
+
+
 while True:
-    pass
+    color_cycle.animate()
